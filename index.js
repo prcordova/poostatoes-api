@@ -20,11 +20,17 @@ app.use(cookieParser());
 app.use("/uploads", express.static(__dirname + "/uploads"));
 
 mongoose.connect(
-  "mongodb+srv://prcordova:D5TIw0yX7VU9QGw5@cluster0.m15f36m.mongodb.net/?retryWrites=true&w=majority"
+  "mongodb+srv://prcordova:SJFm8kt0kdU6Nghr@cluster0.m15f36m.mongodb.net/?retryWrites=true&w=majority"
 );
 
 app.post("/register", async (req, res) => {
   const { username, password } = req.body;
+  const existingUser = await User.findOne({ username });
+
+  if (existingUser) {
+    return res.status(400).json("O nome de usuário já está em uso.");
+  }
+
   try {
     const userDoc = await User.create({
       username,
@@ -40,7 +46,13 @@ app.post("/register", async (req, res) => {
 app.post("/login", async (req, res) => {
   const { username, password } = req.body;
   const userDoc = await User.findOne({ username });
+
+  if (!userDoc) {
+    return res.status(400).json("Usuário não encontrado");
+  }
+
   const passOk = bcrypt.compareSync(password, userDoc.password);
+
   if (passOk) {
     // logged in
     jwt.sign({ username, id: userDoc._id }, secret, {}, (err, token) => {
@@ -51,7 +63,7 @@ app.post("/login", async (req, res) => {
       });
     });
   } else {
-    res.status(400).json("wrong credentials");
+    res.status(400).json("Credenciais inválidas");
   }
 });
 
