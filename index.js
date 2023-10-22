@@ -20,8 +20,8 @@ const fs = require("fs");
 const salt = bcrypt.genSaltSync(10);
 const secret = "asdfe45we45w345wegw345werjktjwertkj";
 
-app.use(cors({ credentials: true, origin: "https://poostatoes.vercel.app/" }));
-// app.use(cors());
+// app.use(cors({ credentials: true, origin: "https://poostatoes.vercel.app/" }));
+app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
 app.use("/uploads", express.static(__dirname + "/uploads"));
