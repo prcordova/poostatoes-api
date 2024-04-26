@@ -19,8 +19,11 @@ app.use(express.json());
 app.use(cookieParser());
 app.use("/uploads", express.static(__dirname + "/uploads"));
 
+const cluster =
+  "@cluster0.s4elogc.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+const passCluster = "K1Ci1Tb4Ct3jCcN6";
 mongoose.connect(
-  "mongodb+srv://prcordova:D5TIw0yX7VU9QGw5@cluster0.m15f36m.mongodb.net/?retryWrites=true&w=majority"
+  "mongodb+srv://prcordova:gta6OepKOUZ71GG6@cluster0.s4elogc.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
 );
 
 app.post("/register", async (req, res) => {
