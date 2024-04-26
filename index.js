@@ -8,13 +8,20 @@ const app = express();
 const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
 const multer = require("multer");
-const uploadMiddleware = multer({ dest: "uploads/" });
+const uploadMiddleware = multer({
+  dest: "uploads/",
+  limits: {
+    fileSize: 1024 * 1024 * 5, // Limite de 5MB (ajuste conforme necessário)
+    files: 5,
+  },
+});
 const fs = require("fs");
 
 const salt = bcrypt.genSaltSync(10);
 const secret = "asdfe45we45w345wegw345werjktjwertkj";
 
-app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
+// app.use(cors({ credentials: true, origin: "https://poostatoes.vercel.app/" }));
+app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
 app.use("/uploads", express.static(__dirname + "/uploads"));
@@ -28,6 +35,12 @@ mongoose.connect(
 
 app.post("/register", async (req, res) => {
   const { username, password } = req.body;
+  const existingUser = await User.findOne({ username });
+
+  if (existingUser) {
+    return res.status(400).json("O nome de usuário já está em uso.");
+  }
+
   try {
     const userDoc = await User.create({
       username,
@@ -43,7 +56,13 @@ app.post("/register", async (req, res) => {
 app.post("/login", async (req, res) => {
   const { username, password } = req.body;
   const userDoc = await User.findOne({ username });
+
+  if (!userDoc) {
+    return res.status(400).json("Usuário não encontrado");
+  }
+
   const passOk = bcrypt.compareSync(password, userDoc.password);
+
   if (passOk) {
     // logged in
     jwt.sign({ username, id: userDoc._id }, secret, {}, (err, token) => {
@@ -54,7 +73,7 @@ app.post("/login", async (req, res) => {
       });
     });
   } else {
-    res.status(400).json("wrong credentials");
+    res.status(400).json("Credenciais inválidas");
   }
 });
 
