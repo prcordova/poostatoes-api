@@ -19,8 +19,10 @@ const uploadMiddleware = multer({
 });
 const fs = require("fs");
 
-const secret = process.env.JWT_SECRET;
+const salt = bcrypt.genSaltSync(10);
+const secret = "asdfe45we45w345wegw345werjktjwertkj";
 
+// app.use(cors({ credentials: true, origin: "https://poostatoes.vercel.app/" }));
 app.use(
   cors({
     credentials: true,
@@ -31,8 +33,9 @@ app.use(express.json());
 app.use(cookieParser());
 app.use("/uploads", express.static(__dirname + "/uploads"));
 
-mongoose.connect(process.env.MONGODB_KEY);
-
+mongoose.connect(
+  "mongodb+srv://prcordova:gta6OepKOUZ71GG6@cluster0.s4elogc.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+);
 app.post("/register", async (req, res) => {
   const { username, password } = req.body;
   const existingUser = await User.findOne({ username });
