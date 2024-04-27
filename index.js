@@ -102,7 +102,13 @@ app.post("/post", uploadMiddleware.single("file"), async (req, res) => {
   const newPath = path + "." + ext;
   fs.renameSync(path, newPath);
 
-  const { token } = req.cookies;
+  // const { token } = req.cookies;
+
+  const token = req.body.token;
+  if (!token) {
+    return res.status(401).json({ error: "No token provided" });
+  }
+
   jwt.verify(token, secret, {}, async (err, info) => {
     if (err) throw err;
     const { title, summary, content } = req.body;
