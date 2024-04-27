@@ -24,19 +24,16 @@ const secret = "asdfe45we45w345wegw345werjktjwertkj";
 app.use(
   cors({
     credentials: true,
-    origin: "http://localhost:3000",
+    origin: ["http://localhost:3000", "https://poostatoes.vercel.app"],
   })
 );
 app.use(express.json());
 app.use(cookieParser());
 app.use("/uploads", express.static(__dirname + "/uploads"));
 
-const cluster =
-  "@cluster0.s4elogc.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
-const passCluster = "K1Ci1Tb4Ct3jCcN6";
-mongoose.connect(
-  "mongodb+srv://prcordova:gta6OepKOUZ71GG6@cluster0.s4elogc.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
-);
+const mongoKey = process.env.MONGODB_KEY;
+
+mongoose.connect(mongoKey, { useNewUrlParser: true, useUnifiedTopology: true });
 
 app.post("/register", async (req, res) => {
   const { username, password } = req.body;
