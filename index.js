@@ -108,7 +108,10 @@ app.post("/post", uploadMiddleware.single("file"), async (req, res) => {
   }
 
   jwt.verify(token, secret, {}, async (err, info) => {
-    if (err) throw err;
+    if (err) {
+      console.error(err);
+      return res.status(401).json({ error: "Invalid token" });
+    }
     const { title, summary, content } = req.body;
     const postDoc = await Post.create({
       title,
