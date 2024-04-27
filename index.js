@@ -102,9 +102,7 @@ app.post("/post", uploadMiddleware.single("file"), async (req, res) => {
   const newPath = path + "." + ext;
   fs.renameSync(path, newPath);
 
-  // const { token } = req.cookies;
-
-  const token = req.body.token;
+  const token = req.headers.authorization.split(" ")[1]; // Extract token from authorization header
   if (!token) {
     return res.status(401).json({ error: "No token provided" });
   }
