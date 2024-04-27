@@ -31,8 +31,6 @@ app.use(express.json());
 app.use(cookieParser());
 app.use("/uploads", express.static(__dirname + "/uploads"));
 
-const mongoKey = process.env.MONGODB_KEY;
-
 mongoose.connect(
   "mongodb+srv://prcordova:gta6OepKOUZ71GG6@cluster0.s4elogc.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
 );
