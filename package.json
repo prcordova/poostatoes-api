@@ -13,5 +13,8 @@
     "start": "nodemon index.js",
     "dev": "nodemon index.js",
     "build": "tsc"
+  },
+  "devDependencies": {
+    "dotenv": "^16.4.5"
   }
 }
