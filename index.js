@@ -8,32 +8,30 @@ const app = express();
 const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
 const multer = require("multer");
+require("dotenv").config();
+
 const uploadMiddleware = multer({
   dest: "uploads/",
   limits: {
-    fileSize: 1024 * 1024 * 5, // Limite de 5MB (ajuste conforme necessário)
-    files: 5,
+    fileSize: 1024 * 1024 * 16, // Limite de 16MB (ajuste conforme necessário)
+    files: 15,
   },
 });
 const fs = require("fs");
 
-const salt = bcrypt.genSaltSync(10);
-const secret = "asdfe45we45w345wegw345werjktjwertkj";
+const secret = process.env.JWT_SECRET;
 
-// app.use(cors({ credentials: true, origin: "https://poostatoes.vercel.app/" }));
 app.use(
   cors({
     credentials: true,
-    origin: "http://localhost:3000",
+    origin: ["http://localhost:3000", "https://poostatoes.vercel.app"],
   })
 );
 app.use(express.json());
 app.use(cookieParser());
 app.use("/uploads", express.static(__dirname + "/uploads"));
 
-mongoose.connect(
-  "mongodb+srv://prcordova:gta6OepKOUZ71GG6@cluster0.s4elogc.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
-);
+mongoose.connect(process.env.MONGODB_KEY);
 
 app.post("/register", async (req, res) => {
   const { username, password } = req.body;
@@ -44,11 +42,12 @@ app.post("/register", async (req, res) => {
   }
 
   try {
+    const salt = bcrypt.genSaltSync(10);
     const userDoc = await User.create({
       username,
       password: bcrypt.hashSync(password, salt),
     });
-    res.json(userDoc);
+    res.status(200).json(userDoc);
   } catch (e) {
     console.log(e);
     res.status(400).json(e);
@@ -69,7 +68,7 @@ app.post("/login", async (req, res) => {
     // logged in
     jwt.sign({ username, id: userDoc._id }, secret, {}, (err, token) => {
       if (err) throw err;
-      res.cookie("token", token).json({
+      res.status(200).cookie("token", token).json({
         id: userDoc._id,
         username,
         token,
@@ -84,12 +83,12 @@ app.get("/profile", (req, res) => {
   const { token } = req.cookies;
   jwt.verify(token, secret, {}, (err, info) => {
     if (err) throw err;
-    res.json(info);
+    res.status(200).json(info);
   });
 });
 
 app.post("/logout", (req, res) => {
-  res.cookie("token", "").json("ok");
+  res.status(200).cookie("token", "").json("ok");
 });
 
 app.post("/post", uploadMiddleware.single("file"), async (req, res) => {
@@ -117,7 +116,7 @@ app.post("/post", uploadMiddleware.single("file"), async (req, res) => {
       cover: newPath,
       author: info.id,
     });
-    res.json(postDoc);
+    res.status(200).json(postDoc);
   });
 });
 
@@ -155,7 +154,7 @@ app.put("/post", uploadMiddleware.single("file"), async (req, res) => {
       "username",
     ]);
 
-    res.json(updatedPost);
+    res.status(200).json(updatedPost);
   });
 });
 
