@@ -24,7 +24,7 @@ const secret = process.env.JWT_SECRET;
 app.use(
   cors({
     credentials: true,
-    origin: ["http://localhost:3000", "https://poostatoes.vercel.app"],
+    origin: "http://localhost:3000",
   })
 );
 app.use(express.json());
