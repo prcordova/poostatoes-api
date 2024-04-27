@@ -31,9 +31,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use("/uploads", express.static(__dirname + "/uploads"));
 
-const mongoKey = process.env.MONGODB_KEY;
-
-mongoose.connect(mongoKey, { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect(process.env.MONGODB_KEY);
 
 app.post("/register", async (req, res) => {
   const { username, password } = req.body;
