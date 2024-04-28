@@ -83,12 +83,27 @@ app.post("/login", async (req, res) => {
   }
 });
 
+// app.get("/profile", (req, res) => {
+//   const { token } = req.cookies;
+//   jwt.verify(token, secret, {}, (err, info) => {
+//     if (err) throw err;
+//     res.status(200).json(info);
+//   });
+// });
+
 app.get("/profile", (req, res) => {
   const { token } = req.cookies;
-  jwt.verify(token, secret, {}, (err, info) => {
-    if (err) throw err;
-    res.status(200).json(info);
-  });
+
+  if (!token) {
+    return res.status(401).json({ message: "Token não fornecido" });
+  }
+
+  try {
+    const user = jwt.verify(token, secret);
+    res.status(200).json(user);
+  } catch (err) {
+    res.status(401).json({ message: "Token inválido" });
+  }
 });
 
 app.post("/logout", (req, res) => {
