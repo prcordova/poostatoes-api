@@ -10,16 +10,33 @@ const cookieParser = require("cookie-parser");
 const multer = require("multer");
 require("dotenv").config();
 
-app.use(
-  cors({
-    credentials: true,
-    origin: [
-      "http://localhost:3000",
-      "https://poostatoes.vercel.app",
-      "https://poostatoes-api.vercel.app",
-    ],
-  })
-);
+// app.use(
+//   cors({
+//     credentials: true,
+//     origin: [
+//       "http://localhost:3000",
+//       "https://poostatoes.vercel.app",
+//       "https://poostatoes-api.vercel.app",
+//     ],
+//   })
+// );
+
+app.use((req, res, next) => {
+  const allowedOrigins = [
+    "http://localhost:3000",
+    "https://poostatoes.vercel.app",
+    "https://poostatoes-api.vercel.app",
+  ];
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader("Access-Control-Allow-Origin", origin);
+  }
+
+  res.header("Access-Control-Allow-Methods", "GET, OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  res.header("Access-Control-Allow-Credentials", true);
+  return next();
+});
 
 const uploadMiddleware = multer({
   dest: "uploads/",
