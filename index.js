@@ -16,7 +16,7 @@ app.use(
     origin: [
       "http://localhost:3000",
       "https://poostatoes.vercel.app",
-      "https://poostatoes-api.vercel.app/post",
+      "https://poostatoes-api.vercel.app",
     ],
   })
 );
