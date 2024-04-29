@@ -1,5 +1,5 @@
 const express = require("express");
-const cors = require("cors");
+// const cors = require("cors");
 const mongoose = require("mongoose");
 const User = require("./models/User");
 const Post = require("./models/Post");
@@ -8,31 +8,33 @@ const app = express();
 const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
 const multer = require("multer");
+
 require("dotenv").config();
 
 const allowedOrigins = [
+  "http://localhost:3000",
   "https://poostatoes.vercel.app",
   "https://poostatoes-api.vercel.app",
-  "http://localhost:3000",
 ];
 
-app.use(
-  cors({
-    origin: function (origin, callback) {
-      if (!origin) return callback(null, true);
-      if (allowedOrigins.indexOf(origin) === -1) {
-        var msg =
-          "A política de CORS para este site não " +
-          "permite acesso a partir do domínio especificado.";
-        return callback(new Error(msg), false);
-      }
-      return callback(null, true);
-    },
-    credentials: true,
-  })
-);
-
 module.exports = (req, res) => {
+  const origin = req.headers.origin;
+
+  if (allowedOrigins.includes(origin)) {
+    // Set header to allow the request origin domain
+    res.setHeader("Access-Control-Allow-Origin", origin);
+  }
+
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
+  res.setHeader("Access-Control-Allow-Credentials", true);
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET, POST, PUT, PATCH, OPTIONS, DELETE"
+  );
+
   //---- other code
 
   //Preflight CORS handler
