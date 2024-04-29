@@ -10,35 +10,14 @@ const cookieParser = require("cookie-parser");
 const multer = require("multer");
 require("dotenv").config();
 
-// app.use(
-//   cors({
-//     credentials: true,
-//     origin: [
-//       "http://localhost:3000",
-//       "https://poostatoes.vercel.app",
-//       "https://poostatoes-api.vercel.app",
-//     ],
-//   })
-// );
-
 const allowedOrigins = [
   "http://localhost:3000",
   "https://poostatoes.vercel.app",
   "https://poostatoes-api.vercel.app",
 ];
-
 app.use(
   cors({
-    origin: function (origin, callback) {
-      if (!origin) return callback(null, true);
-      if (allowedOrigins.indexOf(origin) === -1) {
-        var msg =
-          "A política de CORS para este site não " +
-          "permite acesso a partir do domínio especificado.";
-        return callback(new Error(msg), false);
-      }
-      return callback(null, true);
-    },
+    origin: allowedOrigins,
     credentials: true,
   })
 );
