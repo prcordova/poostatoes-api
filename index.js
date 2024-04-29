@@ -12,15 +12,18 @@ require("dotenv").config();
 
 // app.use(
 //   cors({
-//     origin: "https://localhost:3000",
 //     credentials: true,
+//     origin: [
+//       "http://localhost:3000",
+//       "https://poostatoes.vercel.app",
+//       "https://poostatoes-api.vercel.app",
+//     ],
 //   })
 // );
-
 app.use(
   cors({
-    origin: "https://poostatoes.vercel.app",
     credentials: true,
+    origin: "https://poostatoes.vercel.app",
   })
 );
 
