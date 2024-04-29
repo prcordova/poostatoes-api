@@ -21,22 +21,27 @@ require("dotenv").config();
 //   })
 // );
 
-app.use((req, res, next) => {
-  const allowedOrigins = [
-    "http://localhost:3000",
-    "https://poostatoes.vercel.app",
-    "https://poostatoes-api.vercel.app",
-  ];
-  const origin = req.headers.origin;
-  if (allowedOrigins.includes(origin)) {
-    res.setHeader("Access-Control-Allow-Origin", origin);
-  }
+const allowedOrigins = [
+  "http://localhost:3000",
+  "https://poostatoes.vercel.app",
+  "https://poostatoes-api.vercel.app",
+];
 
-  res.header("Access-Control-Allow-Methods", "GET, OPTIONS");
-  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-  res.header("Access-Control-Allow-Credentials", true);
-  return next();
-});
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.indexOf(origin) === -1) {
+        var msg =
+          "A política de CORS para este site não " +
+          "permite acesso a partir do domínio especificado.";
+        return callback(new Error(msg), false);
+      }
+      return callback(null, true);
+    },
+    credentials: true,
+  })
+);
 
 const uploadMiddleware = multer({
   dest: "uploads/",
