@@ -10,14 +10,13 @@ const cookieParser = require("cookie-parser");
 const multer = require("multer");
 require("dotenv").config();
 
-const allowedOrigins = [
-  "http://localhost:3000",
-  "https://poostatoes.vercel.app",
-  "https://poostatoes-api.vercel.app",
-];
+// const allowedOrigins =
+//   ? "http://localhost:4000"
+//   : "https://poostatoes.vercel.app";
+
 app.use(
   cors({
-    origin: allowedOrigins,
+    origin: "https://poostatoes.vercel.app",
     credentials: true,
   })
 );
